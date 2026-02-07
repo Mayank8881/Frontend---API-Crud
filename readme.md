@@ -136,7 +136,7 @@ Body (JSON):
 **PUT**
 
 ```
-/api/employees/EMP-1001
+/api/employees/EMP001
 ```
 
 Body (JSON):
