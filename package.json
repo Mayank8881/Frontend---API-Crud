@@ -1,0 +1,9 @@
+{
+  "name": "frontend-api-crud-monorepo",
+  "private": true,
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "uuid": "^13.0.0"
+  }
+}
