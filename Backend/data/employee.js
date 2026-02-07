@@ -1,10 +1,12 @@
-const { v4: uuidv4 } = require("uuid");
+// const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
+
 
 let employees = [];
 
 function createEmployee(data) {
   const employee = { 
-    id: uuidv4(),
+    id: crypto.randomUUID(),
     empId: data.empId, 
     name: data.name,
     email: data.email,
