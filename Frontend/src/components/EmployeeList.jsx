@@ -12,7 +12,8 @@ export default function EmployeeList({ employees, refresh, onEdit, showToast }) 
             onClick={async () => {
               toast.dismiss(t.id);
               try {
-                await axios.delete(`http://localhost:5000/api/employees/${empId}`);
+                // await axios.delete(`http://localhost:5000/api/employees/${empId}`);
+                await axios.delete(`/api/employees/${empId}`);
                 showToast?.("Employee deleted successfully", "success");
                 refresh();
               } catch (err) {

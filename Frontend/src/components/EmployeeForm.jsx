@@ -44,8 +44,9 @@ export default function EmployeeForm({
 
     try {
       if (selected) {
-        await axios.put(
-          `http://localhost:5000/api/employees/${form.empId}`,
+        // await axios.put(
+        //   `http://localhost:5000/api/employees/${form.empId}`,
+        await axios.put(`/api/employees/${form.empId}`,
           {
             name: form.name,
             email: form.email,
@@ -55,10 +56,11 @@ export default function EmployeeForm({
         );
       } else {
         // CREATE
-        await axios.post(
-          "http://localhost:5000/api/employees",
-          form
-        );
+        // await axios.post(
+        //   "http://localhost:5000/api/employees",
+        //   form
+        // );
+        await axios.post("/api/employees", form);
       }
 
       setForm(initialForm);

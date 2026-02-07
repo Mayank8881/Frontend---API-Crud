@@ -13,7 +13,9 @@ function App() {
   }, []);
 
   const fetchEmployees = async () => {
-    const res = await axios.get("http://localhost:5000/api/employees");
+    // const res = await axios.get("http://localhost:5000/api/employees");
+    const res = await axios.get("/api/employees");
+
     setEmployees(res.data);
   };
 
