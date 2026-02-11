@@ -1,32 +1,41 @@
 
 ---
 
-# Employee CRUD Application (React + Express + Vercel)
+# Employee CRUD Application (React + Flask + Supabase)
 
-A simple Employee CRUD (Create, Read, Update, Delete) application built using:
+A comprehensive Employee CRUD (Create, Read, Update, Delete) application with persistent database storage and CSV export functionality:
 
 * **Frontend:** React (Vite) + Tailwind CSS
-* **Backend:** Express.js (in-memory storage) deployed as **Vercel Serverless Function**
+* **Backend:** Flask REST API
+* **Database:** Supabase PostgreSQL (persistent storage)
+* **Additional Features:** CSV Export, Dashboard with statistics, Real-time notifications
 * **API Testing:** Postman
 
 This project supports:
 
-* Add Employee
-* View Employee List
-* Update Employee (by `empId`)
-* Delete Employee (by `empId`)
-* Prevent duplicate `empId`
-* Prevent duplicate email
-* Cleanup delete by internal `id`
+* ✅ Add Employee
+* ✅ View Employee List
+* ✅ Update Employee (by `empId`)
+* ✅ Delete Employee (by `empId`)
+* ✅ Download Employee Records as CSV
+* ✅ Dashboard with Statistics (Total Employees, Average Salary, Department Count)
+* ✅ Prevent duplicate `empId`
+* ✅ Prevent duplicate email
+* ✅ Real-time Toast Notifications
+* ✅ Persistent Data Storage
 
 ---
 
-## Live Demo
+## Live Demo & Hosted URLs
 
-Frontend + Backend deployed on Vercel:
+### Frontend (Deployed)
+* **Frontend URL:** `https://your-frontend-url.vercel.app` (Update with your hosted URL)
+* **Features:** Dashboard, Employee Management, CSV Export
 
-* **App URL:** `https://frontend-api-crud.vercel.app`
-* **API Base URL:** `https://frontend-api-crud.vercel.app/api/employees`
+### Backend (Flask + Supabase)
+* **Backend API URL:** `https://your-backend-url.herokuapp.com` (Update with your hosted Flask URL)
+* **Database:** Supabase PostgreSQL
+* **Features:** REST API, Persistent data, CSV Export endpoint
 
 ---
 
@@ -34,33 +43,30 @@ Frontend + Backend deployed on Vercel:
 
 ```
 Frontend---API-Crud/
-├── api/
-│   └── employees.js                 # Vercel Serverless API entry
-│
-├── Backend/
-│   ├── data/
-│   │   └── employee.js              # In-memory employee array + create function
-│   ├── routes/
-│   │   └── Routes.js                # CRUD routes
-│   ├── server.js                    # For local backend run (optional)
-│   └── package.json                 # Backend dependencies (local use)
+├── Backend-Flask/
+│   ├── app.py                       # Flask application with REST API endpoints
+│   ├── supabase_client.py           # Supabase database configuration
+│   ├── requirements.txt             # Python dependencies
+│   └── __pycache__/                 # Python cache directory
 │
 ├── Frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── EmployeeForm.jsx
-│   │   │   └── EmployeeList.jsx
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│   ├── tailwind.config.js
-│   ├── postcss.config.js
-│   ├── vite.config.js
-│   └── package.json
+│   │   │   ├── EmployeeForm.jsx     # Employee form component (add/edit)
+│   │   │   └── EmployeeList.jsx     # Employee list display component
+│   │   ├── App.jsx                  # Main app component with dashboard
+│   │   ├── main.jsx                 # React entry point
+│   │   ├── App.css                  # App styles
+│   │   └── index.css                # Global styles
+│   ├── tailwind.config.js           # Tailwind CSS configuration
+│   ├── postcss.config.js            # PostCSS configuration
+│   ├── vite.config.js               # Vite build configuration
+│   ├── eslint.config.js             # ESLint configuration
+│   ├── index.html                   # HTML template
+│   └── package.json                 # Frontend dependencies
 │
-├── vercel.json                      # Vercel routing config
-├── package.json                     # Root deps for serverless function
-└── README.md
+├── package.json                     # Root package configuration
+└── README.md                        # Project documentation
 ```
 
 ---
@@ -69,151 +75,131 @@ Frontend---API-Crud/
 
 ### Frontend
 
-* Clean UI with Tailwind CSS
-* Toast notifications using `react-hot-toast`
-* Edit mode disables `empId` to keep it as a primary key
-* Axios integration with backend API
+* **Clean UI** with Tailwind CSS and gradient backgrounds
+* **Toast notifications** using `react-hot-toast` for user feedback
+* **Dashboard** with statistics (total employees, average salary, department count)
+* **Edit mode** disables `empId` to maintain it as a primary key
+* **CSV Export** functionality to download employee records
+* **Axios** integration with backend API
+* **Form Validation** with real-time email and salary validation
+* **Responsive Design** with mobile-friendly layout
 
-### Backend
+### Backend (Flask + Supabase)
 
-* Express REST API
-* Uses in-memory array to store employees
-* Unique `empId` validation
-* Unique email validation
-* Update and delete based on `empId`
-* Extra cleanup delete route by internal `id`
+* **Flask REST API** with comprehensive error handling
+* **Supabase PostgreSQL** database for persistent data storage
+* CRUD endpoints (Create, Read, Update, Delete employees)
+* **CSV Export** endpoint to download all employees as CSV file
+* Unique `empId` and email constraints at database level
+* Environment variable configuration via `.env`
+* Complete error handling with user-friendly messages
+* Comprehensive code documentation and comments
+* CORS enabled for frontend integration
 
 ---
 
 ## API Endpoints
 
-Base URL:
+Base URL: `https://your-backend-url.herokuapp.com/api/employees` (Update with your hosted Flask URL)
 
+**1. Get All Employees**
 ```
-/api/employees
-```
-
-### 1. Get All Employees
-
-**GET**
-
-```
-/api/employees
+GET /api/employees
 ```
 
 Response:
-
 ```json
-[]
+[
+  {
+    "emp_id": "EMP001",
+    "name": "Mayank",
+    "email": "mayank@example.com",
+    "department": "DAD",
+    "salary": 50000,
+    "created_at": "2026-02-11T10:30:00Z"
+  }
+]
 ```
 
----
-
-### 2. Add Employee
-
-**POST**
-
+**2. Add Employee**
 ```
-/api/employees
+POST /api/employees
 ```
 
-Body (JSON):
-
+Request Body:
 ```json
 {
-  "empId": "EMP001",
+  "emp_id": "EMP001",
   "name": "Mayank",
-  "email": "mayank@gmail.com",
+  "email": "mayank@example.com",
   "department": "DAD",
   "salary": 50000
 }
 ```
 
----
-
-### 3. Update Employee (by empId)
-
-**PUT**
-
+**3. Update Employee (by empId)**
 ```
-/api/employees/EMP001
+PUT /api/employees/<empId>
 ```
 
-Body (JSON):
-
+Request Body:
 ```json
 {
   "name": "Mayank M",
-  "email": "mayank@gmail.com",
+  "email": "mayank.m@example.com",
   "department": "APIM",
   "salary": 60000
 }
 ```
 
----
-
-### 4. Delete Employee (by empId)
-
-**DELETE**
-
+**4. Delete Employee (by empId)**
 ```
-/api/employees/EMP001
+DELETE /api/employees/<empId>
 ```
 
----
-
-### 5. Delete Employee (Cleanup by internal id)
-
-This route is useful if a wrong record is created without `empId`.
-
-**DELETE**
-
-```
-/api/employees/by-id/<employee_id>
+Response:
+```json
+{
+  "message": "Employee deleted successfully"
+}
 ```
 
-Example:
+**5. Export Employees as CSV** ⭐
+```
+GET /api/employees/export/csv
+```
 
-```
-/api/employees/by-id/88a972a8-946a-4cc9-9f04-e1920250ad56
-```
+Downloads a CSV file with all employee records containing columns:
+- emp_id
+- name
+- email
+- department
+- salary
+- created_at
+
+File naming: `employees_YYYYMMDD_HHMMSS.csv`
 
 ---
 
 ## Postman Testing
 
-### Example: Add Employee
-
-* Method: **POST**
-* URL:
-
-```
-https://frontend-api-crud.vercel.app/api/employees
-```
-
+**Example: Add Employee**
+* Method: `POST`
+* URL: `https://your-backend-url.herokuapp.com/api/employees`
 * Body: raw JSON
 
----
+**Example: Update Employee**
+* Method: `PUT`
+* URL: `https://your-backend-url.herokuapp.com/api/employees/EMP001`
 
-### Example: Update Employee
+**Example: Delete Employee**
+* Method: `DELETE`
+* URL: `https://your-backend-url.herokuapp.com/api/employees/EMP001`
 
-* Method: **PUT**
-* URL:
-
-```
-https://frontend-api-crud.vercel.app/api/employees/EMP001
-```
-
----
-
-### Example: Delete Employee
-
-* Method: **DELETE**
-* URL:
-
-```
-https://frontend-api-crud.vercel.app/api/employees/EMP001
-```
+**Example: Export CSV**
+* Method: `GET`
+* URL: `https://your-backend-url.herokuapp.com/api/employees/export/csv`
+* Action: File will be automatically downloaded
 
 ---
 
@@ -236,65 +222,121 @@ npm install
 npm run dev
 ```
 
-Frontend runs at:
+Frontend runs at: `http://localhost:5173`
 
+Update Frontend `.env` file with Flask backend URL:
 ```
-http://localhost:5173
+VITE_API_URL=http://localhost:5000
 ```
 
 ---
 
-### 3. Run Backend Locally (Optional)
+### 3. Run Flask Backend Locally (Recommended)
 
+#### Prerequisites
+* Python 3.8+
+* Supabase account with PostgreSQL database
+
+#### Setup Steps
+
+1. **Install Python dependencies:**
 ```bash
-cd Backend
-npm install
-node server.js
+cd Backend-Flask
+pip install -r requirements.txt
 ```
 
-Backend runs at:
-
+2. **Create `.env` file in Backend-Flask folder:**
 ```
-http://localhost:5000
-```
-
----
-
-## Deployment (Vercel)
-
-This project is deployed on Vercel using:
-
-* React frontend inside `Frontend/`
-* Express API as Vercel Serverless Function in `/api/employees.js`
-* API calls from frontend use relative path:
-
-```js
-axios.get("/api/employees")
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+PORT=5000
 ```
 
----
+3. **Get Supabase credentials:**
+   - Go to [Supabase Dashboard](https://supabase.com)
+   - Create a new project
+   - Navigate to Project Settings > API
+   - Copy the `Project URL` and `Anon (public)` key
 
-## Important Notes
+4. **Create Database Table:**
+   - In Supabase SQL Editor, run:
+   ```sql
+   CREATE TABLE employees (
+     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+     emp_id VARCHAR(50) UNIQUE NOT NULL,
+     name VARCHAR(255) NOT NULL,
+     email VARCHAR(255) UNIQUE NOT NULL,
+     department VARCHAR(100),
+     salary NUMERIC(10, 2),
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+   ```
 
-### In-Memory Storage
+5. **Run Flask server:**
+```bash
+python app.py
+```
 
-This backend uses an in-memory array, so:
-
-✅ CRUD works normally
-❌ Data resets when Vercel redeploys or serverless function restarts
-
-This is expected for a basic CRUD demo.
+Flask backend runs at: `http://localhost:5000`
 
 ---
 
 ## Tech Stack
 
-* React (Vite)
+### Frontend
+* React 19 (Vite)
 * Tailwind CSS
-* Express.js
 * Axios
-* Postman
-* Vercel
+* React Hot Toast
+
+### Backend
+* Flask
+* Flask-CORS
+* Supabase (PostgreSQL)
+* Python
+* Gunicorn
+
+### Database
+* **Supabase PostgreSQL** - Persistent relational database for employee records
+
+### Additional Tools
+* Postman (API Testing)
+* Git (Version Control)
+* Python pip (Package Manager)
+
+---
+
+## New Feature: CSV Export 📊
+
+The Flask backend includes a CSV export feature that allows users to download all employee records as a CSV file.
+
+### How to Use
+
+1. Click the **"Download CSV"** button in the dashboard header (top-right)
+2. The browser will automatically download a file named `employees_YYYYMMDD_HHMMSS.csv`
+3. Open the file in Excel, Google Sheets, or any spreadsheet application
+
+### CSV File Contents
+
+The exported CSV includes the following columns:
+* `emp_id` - Employee ID
+* `name` - Employee Name
+* `email` - Employee Email
+* `department` - Department
+* `salary` - Annual Salary
+* `created_at` - Record Creation Timestamp
+
+### Backend API
+
+```
+GET /api/employees/export/csv
+```
+
+**Response:** Binary file with MIME type `text/csv`
+
+### Frontend Implementation
+
+The frontend uses `axios` with `responseType: "blob"` to handle the binary file response and triggers a browser download automatically.
 
 ---
 
