@@ -29,11 +29,11 @@ This project supports:
 ## Live Demo & Hosted URLs
 
 ### Frontend (Deployed)
-* **Frontend URL:** `https://your-frontend-url.vercel.app` (Update with your hosted URL)
+* **Frontend URL:** `https://frontend-api-crud.vercel.app` 
 * **Features:** Dashboard, Employee Management, CSV Export
 
 ### Backend (Flask + Supabase)
-* **Backend API URL:** `https://your-backend-url.herokuapp.com` (Update with your hosted Flask URL)
+* **Backend API URL:** `https://frontend-api-crud.onrender.com`
 * **Database:** Supabase PostgreSQL
 * **Features:** REST API, Persistent data, CSV Export endpoint
 
@@ -100,7 +100,7 @@ Frontend---API-Crud/
 
 ## API Endpoints
 
-Base URL: `https://your-backend-url.herokuapp.com/api/employees` (Update with your hosted Flask URL)
+Base URL: `https://frontend-api-crud.onrender.com/api/employees` 
 
 **1. Get All Employees**
 ```
@@ -185,20 +185,20 @@ File naming: `employees_YYYYMMDD_HHMMSS.csv`
 
 **Example: Add Employee**
 * Method: `POST`
-* URL: `https://your-backend-url.herokuapp.com/api/employees`
+* URL: `https://frontend-api-crud.onrender.com/api/employees`
 * Body: raw JSON
 
 **Example: Update Employee**
 * Method: `PUT`
-* URL: `https://your-backend-url.herokuapp.com/api/employees/EMP001`
+* URL: `https://frontend-api-crud.onrender.com/api/employees/EMP001`
 
 **Example: Delete Employee**
 * Method: `DELETE`
-* URL: `https://your-backend-url.herokuapp.com/api/employees/EMP001`
+* URL: `https://frontend-api-crud.onrender.com/api/employees/EMP001`
 
 **Example: Export CSV**
 * Method: `GET`
-* URL: `https://your-backend-url.herokuapp.com/api/employees/export/csv`
+* URL: `https://frontend-api-crud.onrender.com/api/employees/export/csv`
 * Action: File will be automatically downloaded
 
 ---
