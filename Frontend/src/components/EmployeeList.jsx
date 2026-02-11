@@ -1,9 +1,10 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
+const API = import.meta.env.VITE_API_URL;
 
 export default function EmployeeList({ employees, refresh, onEdit, showToast }) {
 
-  const remove = (empId) => {
+  const remove = (emp_id) => {
     toast((t) => (
       <div className="bg-white p-3 rounded shadow flex items-center space-x-4">
         <div className="flex-1">Are you sure you want to delete this employee?</div>
@@ -13,7 +14,7 @@ export default function EmployeeList({ employees, refresh, onEdit, showToast }) 
               toast.dismiss(t.id);
               try {
                 // await axios.delete(`http://localhost:5000/api/employees/${empId}`);
-                await axios.delete(`/api/employees/${empId}`);
+                await axios.delete(`${API}/api/employees/${emp_id}`);
                 showToast?.("Employee deleted successfully", "success");
                 refresh();
               } catch (err) {
@@ -46,7 +47,7 @@ export default function EmployeeList({ employees, refresh, onEdit, showToast }) 
         >
           <div>
             <p className="font-bold">
-              {emp.name} ({emp.empId})
+              {emp.name} ({emp.emp_id})
             </p>
             <p className="text-sm text-gray-600">
               {emp.email} | {emp.department} | ₹{emp.salary}
@@ -62,7 +63,7 @@ export default function EmployeeList({ employees, refresh, onEdit, showToast }) 
             </button>
 
             <button
-              onClick={() => remove(emp.empId)}
+              onClick={() => remove(emp.emp_id)}
               className="text-red-600 font-semibold"
             >
               Delete

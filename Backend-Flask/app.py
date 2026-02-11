@@ -33,7 +33,7 @@ def create_employee():
     try:
         data = request.json
 
-        emp_id = str(data.get("empId", "")).strip()
+        emp_id = str(data.get("emp_id", "")).strip()
         name = str(data.get("name", "")).strip()
         email = str(data.get("email", "")).strip()
         department = str(data.get("department", "")).strip()

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+const API = import.meta.env.VITE_API_URL;
 
 export default function EmployeeForm({
   refresh,
@@ -8,7 +9,7 @@ export default function EmployeeForm({
   showToast
 }) {
   const initialForm = {
-    empId: "",
+    emp_id: "",
     name: "",
     email: "",
     department: "",
@@ -22,7 +23,7 @@ export default function EmployeeForm({
   useEffect(() => {
     if (selected) {
       setForm({
-        empId: selected.empId,
+        emp_id: selected.emp_id,
         name: selected.name,
         email: selected.email,
         department: selected.department,
@@ -45,8 +46,8 @@ export default function EmployeeForm({
     try {
       if (selected) {
         // await axios.put(
-        //   `http://localhost:5000/api/employees/${form.empId}`,
-        await axios.put(`/api/employees/${form.empId}`,
+        //   `http://localhost:5000/api/employees/${form.emp_id}`,
+        await axios.put(`${API}/api/employees/${form.emp_id}`,
           {
             name: form.name,
             email: form.email,
@@ -60,7 +61,7 @@ export default function EmployeeForm({
         //   "http://localhost:5000/api/employees",
         //   form
         // );
-        await axios.post("/api/employees", form);
+        await axios.post(`${API}/api/employees`, form);
       }
 
       setForm(initialForm);
@@ -94,14 +95,13 @@ export default function EmployeeForm({
         {selected ? "Update Employee" : "Add Employee"}
       </h2>
       <input
-        name="empId"
+        name="emp_id"
         placeholder="Employee ID (EMP-1001)"
-        value={form.empId}
+        value={form.emp_id}
         onChange={handleChange}
         disabled={!!selected}
-        className={`border p-2 w-full mb-2 ${
-          selected ? "bg-gray-100 cursor-not-allowed" : ""
-        }`}
+        className={`border p-2 w-full mb-2 ${selected ? "bg-gray-100 cursor-not-allowed" : ""
+          }`}
         required
       />
       <input
@@ -149,8 +149,8 @@ export default function EmployeeForm({
         {loading
           ? "Saving..."
           : selected
-          ? "Update Employee"
-          : "Add Employee"}
+            ? "Update Employee"
+            : "Add Employee"}
       </button>
     </form>
   );

@@ -3,6 +3,7 @@ import axios from "axios";
 import EmployeeForm from "./components/EmployeeForm";
 import EmployeeList from "./components/EmployeeList";
 import { Toaster, toast } from "react-hot-toast";
+const API = import.meta.env.VITE_API_URL;
 
 function App() {
   const [employees, setEmployees] = useState([]);
@@ -14,7 +15,7 @@ function App() {
 
   const fetchEmployees = async () => {
     // const res = await axios.get("http://localhost:5000/api/employees");
-    const res = await axios.get("/api/employees");
+    const res = await axios.get(`${API}/api/employees`);
 
     setEmployees(res.data);
   };
