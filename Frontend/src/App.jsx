@@ -32,6 +32,36 @@ function App() {
     setEmployees(res.data);
   };
 
+  // Download employees as CSV file
+  const downloadCSV = async () => {
+    try {
+      // Call the backend CSV export endpoint
+      const response = await axios.get(`${API}/api/employees/export/csv`, {
+        responseType: "blob" // Important: get response as blob for file download
+      });
+
+      // Create a blob URL for the CSV data
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      // Create a temporary anchor element to trigger download
+      const link = document.createElement("a");
+      link.href = url;
+      // Extract filename from Content-Disposition header or use default
+      const filename = response.headers["content-disposition"]?.split("filename=")[1]?.replace(/"/g, "") || "employees.csv";
+      link.setAttribute("download", filename);
+      // Append to DOM and trigger click
+      document.body.appendChild(link);
+      link.click();
+      // Cleanup - remove the temporary link element
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      showToast("CSV downloaded successfully", "success");
+    } catch (err) {
+      console.error("Download error:", err);
+      showToast(err?.response?.data?.message || "Failed to download CSV", "error");
+    }
+  };
+
 
   // Calculate dashboard statistics from employees data
   // Total number of employees
@@ -60,6 +90,15 @@ function App() {
 
             <div className="hidden sm:flex items-center space-x-4">
               <div className="text-sm text-purple-600">Welcome</div>
+              {/* Download CSV Button */}
+              <button
+                onClick={downloadCSV}
+                className="text-sm bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center gap-2 transition-colors"
+                title="Download employee records as CSV"
+              >
+                <span>↓</span>
+                <span>Download CSV</span>
+              </button>
             </div>
           </div>
 

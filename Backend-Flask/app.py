@@ -4,10 +4,13 @@ Provides RESTful endpoints for CRUD operations on employees
 Connected to Supabase PostgreSQL database
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from supabase_client import get_supabase
 import os
+import csv
+from io import StringIO
+from datetime import datetime
 
 # Initialize Flask application
 app = Flask(__name__)
@@ -49,11 +52,63 @@ def get_employees():
         return jsonify({"message": str(e)}), 500
 
 
+# ========================================
+# GET employees as CSV export
+# ========================================
+@app.route("/api/employees/export/csv", methods=["GET"])
+def export_employees_csv():
+    """
+    Export all employees as a CSV file
+    Returns a downloadable CSV file containing all employee records
+    
+    Returns:
+        CSV file: Downloaded file with employee data
+        500: If database query or CSV generation fails
+    """
+    try:
+        supabase = get_supabase()
+        # Fetch all employees from database
+        res = supabase.table("employees").select("*").order("created_at", desc=True).execute()
+        employees = res.data
+        
+        if not employees:
+            return jsonify({"message": "No employees found"}), 404
+        
+        # Create CSV in memory
+        output = StringIO()
+        # Define CSV column headers - these are the field names from the database
+        fieldnames = ["emp_id", "name", "email", "department", "salary", "created_at"]
+        writer = csv.DictWriter(output, fieldnames=fieldnames)
+        
+        # Write header row
+        writer.writeheader()
+        
+        # Write employee data rows
+        for employee in employees:
+            # Only include specified fields in CSV
+            row = {field: employee.get(field, "") for field in fieldnames}
+            writer.writerow(row)
+        
+        # Prepare response with CSV data
+        csv_data = output.getvalue()
+        output.close()
+        
+        # Create response with CSV file attachment
+        response = make_response(csv_data)
+        # Generate filename with current timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"employees_{timestamp}.csv"
+        
+        # Set response headers for file download
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        response.headers["Content-Type"] = "text/csv"
+        
+        return response
+        
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
 
 
-# ========================================
-# POST create employee
-# ========================================
 @app.route("/api/employees", methods=["POST"])
 def create_employee():
     """
