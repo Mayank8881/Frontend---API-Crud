@@ -10,7 +10,7 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 @app.route("/", methods=["GET"])
 def home():
-    return "Flask backend is running!"
+    return "Flask backend is running! v0.10"
 
 # -------------------------------
 # GET all employees
