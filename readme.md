@@ -10,6 +10,7 @@ A comprehensive Employee CRUD (Create, Read, Update, Delete) application with pe
 * **Database:** Supabase PostgreSQL (persistent storage)
 * **Additional Features:** CSV Export, Dashboard with statistics, Real-time notifications
 * **API Testing:** Postman
+* **Log File:** Logger
 
 This project supports:
 
@@ -18,6 +19,7 @@ This project supports:
 * ✅ Update Employee (by `empId`)
 * ✅ Delete Employee (by `empId`)
 * ✅ Download Employee Records as CSV
+* ✅ Logging / Log Manitanence
 * ✅ Dashboard with Statistics (Total Employees, Average Salary, Department Count)
 * ✅ Prevent duplicate `empId`
 * ✅ Prevent duplicate email
