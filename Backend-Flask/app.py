@@ -8,6 +8,10 @@ from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from supabase_client import get_supabase
 import os
+import logging
+from logging.handlers import RotatingFileHandler
+import time
+import traceback
 import csv
 from io import StringIO
 from datetime import datetime
@@ -17,6 +21,57 @@ app = Flask(__name__)
 
 # Enable CORS for all /api/* routes to allow frontend requests
 CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+# Configure logging for the Flask app: 
+log_level = os.environ.get("LOG_LEVEL", "INFO").upper()
+logger = logging.getLogger("backend-flask")
+logger.setLevel(getattr(logging, log_level, logging.INFO))
+formatter = logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s")
+
+# Ensure logs directory exists
+logs_dir = os.environ.get("LOG_DIR", "logs")
+os.makedirs(logs_dir, exist_ok=True)
+log_file = os.path.join(logs_dir, "backend-flask.log")
+
+# Rotating file handler to keep logs manageable
+file_handler = RotatingFileHandler(log_file, maxBytes=5 * 1024 * 1024, backupCount=5)
+file_handler.setFormatter(formatter)
+
+# Replace any existing handlers with the file handler to avoid terminal output
+if logger.handlers:
+    for h in list(logger.handlers):
+        logger.removeHandler(h)
+logger.addHandler(file_handler)
+
+app.logger = logger
+
+
+# Request timing and logging
+@app.before_request
+def _start_timer():
+    request._start_time = time.time()
+    app.logger.info("Incoming request: %s %s from %s", request.method, request.path, request.remote_addr)
+    if request.method in ("POST", "PUT", "PATCH"):
+        try:
+            app.logger.debug("Request JSON: %s", request.get_json(silent=True))
+        except Exception:
+            app.logger.debug("Request body could not be parsed as JSON")
+
+
+@app.after_request
+def _log_request(response):
+    now = time.time()
+    duration = round(now - getattr(request, "_start_time", now), 4)
+    app.logger.info("%s %s -> %s (%.4fs) from %s", request.method, request.path, response.status_code, duration, request.remote_addr)
+    return response
+
+
+# Global exception handler to ensure exceptions are logged server-side
+@app.errorhandler(Exception)
+def _handle_exception(e):
+    app.logger.error("Unhandled exception: %s", str(e))
+    app.logger.debug(traceback.format_exc())
+    return jsonify({"message": "Internal server error"}), 500
 
 
 # Health check endpoint
@@ -268,4 +323,5 @@ if __name__ == "__main__":
     Listens on all network interfaces (0.0.0.0) for external connections
     """
     port = int(os.environ.get("PORT", 5000))
+    app.logger.info("Starting Flask backend on %s:%s", "0.0.0.0", port)
     app.run(host="0.0.0.0", port=port)
